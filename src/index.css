@@ -1,0 +1,14 @@
+.container-setinhas {
+    float: right;
+    margin-top: 10px;
+}
+
+.container-setinhas > button {
+    margin-left: 5px;
+}
+
+th {
+    h2 {
+        float: left;
+    }
+}

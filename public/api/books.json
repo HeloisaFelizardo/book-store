@@ -1,0 +1,23 @@
+[
+  {
+    "id": 1,
+    "titulo": "Estruturas de dados e algoritmos com JavaScript",
+    "autor": "Loiane Groner",
+    "editora": "Novatec",
+    "preco": 67.80
+  },
+  {
+    "id": 2,
+    "titulo": "O programador pragmático",
+    "autor": "Andrew Hunt, David Thomas",
+    "editora": "Bookman",
+    "preco": 57.90
+  },
+  {
+    "id": 3,
+    "titulo": "Lógica de programação e Algoritmos com JavaScript",
+    "autor": "Edécio Fernando Iepsen",
+    "editora": "Novatec",
+    "preco": 70.90
+  }
+]
