@@ -3,29 +3,25 @@ import { Container, Table } from "react-bootstrap";
 import TableHead from "./components/TableHead.jsx";
 import TableFoot from "./components/TableFoot.jsx";
 import TableBody from "./components/TableBody.jsx";
+import { fetchLivros, addBook, updateBook, deleteBook } from "./services/bookService.jsx";
 
 function App() {
   const [livros, setLivros] = useState([]);
 
   useEffect(() => {
-    fetch('/api/books.json')
-      .then(res => res.json())
-      .then(livros => setLivros(livros))
-      .catch(error => {
-        console.log('Erro na requisição: ' + error);
-      })
-      .finally(() => {
-        console.log('Sempre retorna');
-      });
+    const loadLivros = async () => {
+      try {
+        const livrosData = await fetchLivros();
+        setLivros(livrosData);
+      } catch (error) {
+        console.error('Erro ao carregar livros:', error);
+      }
+    };
+
+    loadLivros();
   }, []);
 
-  function handleRemoveLine(id) {
-    const books = livros.filter((book) => book.id !== id);
-    setLivros(books);
-    console.log(id + ' botão clicado');
-  }
-
-  function handleSort(column, direction) {
+  const handleSort = (column, direction) => {
     const sortedBooks = [...livros].sort((a, b) => {
       if (typeof a[column] === 'string') {
         return direction === 'asc'
@@ -37,13 +33,44 @@ function App() {
         : b[column] - a[column];
     });
     setLivros(sortedBooks);
-  }
+  };
+
+  const handleAddBook = async (newBook) => {
+    try {
+      const addedBook = await addBook(newBook);
+      setLivros([...livros, addedBook]);
+    } catch (error) {
+      console.error('Erro ao adicionar livro:', error);
+    }
+  };
+
+  const handleUpdateBook = async (id, updatedBook) => {
+    try {
+      const updated = await updateBook(id, updatedBook);
+      setLivros(livros.map(livro => (livro.id === id ? updated : livro)));
+    } catch (error) {
+      console.error('Erro ao atualizar livro:', error);
+    }
+  };
+
+  const handleDeleteBook = async (id) => {
+    try {
+      await deleteBook(id);
+      setLivros(livros.filter(livro => livro.id !== id));
+    } catch (error) {
+      console.error('Erro ao excluir livro:', error);
+    }
+  };
 
   return (
     <Container>
       <Table striped bordered hover responsive="lg">
         <TableHead onSort={handleSort} />
-        <TableBody livros={livros} deleteBook={handleRemoveLine} />
+        <TableBody
+          livros={livros}
+          deleteBook={handleDeleteBook}
+          updateBook={handleUpdateBook}
+        />
         <TableFoot qtdLivros={livros.length} />
       </Table>
     </Container>

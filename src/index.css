@@ -3,8 +3,8 @@
     margin-top: 10px;
 }
 
-.container-setinhas > button {
-    margin-left: 5px;
+button {
+    margin: 5px !important;
 }
 
 th {
