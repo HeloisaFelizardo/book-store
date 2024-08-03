@@ -9,7 +9,7 @@ function App() {
   const [livros, setLivros] = useState([]);
 
   useEffect(() => {
-    const loadLivros = async () => {
+    const loadBooks = async () => {
       try {
         const livrosData = await fetchLivros();
         setLivros(livrosData);
@@ -18,7 +18,7 @@ function App() {
       }
     };
 
-    loadLivros();
+    loadBooks();
   }, []);
 
   const handleSort = (column, direction) => {
@@ -71,7 +71,7 @@ function App() {
           deleteBook={handleDeleteBook}
           updateBook={handleUpdateBook}
         />
-        <TableFoot qtdLivros={livros.length} />
+        <TableFoot qtdLivros={livros.length} addBook={handleAddBook}/>
       </Table>
     </Container>
   );
