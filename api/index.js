@@ -1,7 +1,9 @@
 import express from 'express';
 import cors from 'cors';
 import { PrismaClient } from '@prisma/client';
-import { bookRoutes } from './routes/bookRoutes.js'; // Ajuste o caminho conforme necessário
+import { bookRoutes } from './routes/bookRoutes.js';
+import {registerRoutes} from "./routes/registerRoutes.js";
+import {authenticateToken} from "./middleware/authenticateToken.js"; // Ajuste o caminho conforme necessário
 
 const app = express();
 app.use(express.json());
@@ -21,6 +23,7 @@ app.use(cors({
 }));
 
 app.use('/books', bookRoutes);
+app.use('/api', registerRoutes);
 
 app.listen(PORT, () => {
   console.log(`Servidor rodando na porta ${PORT}`);

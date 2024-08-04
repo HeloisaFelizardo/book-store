@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import { BookController } from '../controllers/BookController.js';
 
-const bookRoutes = new Router();
+const bookRoutes = Router();
 const bookController = new BookController();
 
 bookRoutes.get('/', bookController.findAllBooks);
