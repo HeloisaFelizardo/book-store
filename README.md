@@ -54,3 +54,24 @@ classDiagram
 - **User e Cart**: Um usuário tem um carrinho.
 - **Cart e CartItem**: Um carrinho pode ter múltiplos itens.
 - **CartItem e Book**: Um item do carrinho está vinculado a um livro específico.
+
+### Testando
+
+1. **Inicie o Servidor dentro da pasta /api**:
+    - Execute o comando:
+
+      ```sh
+      npm run dev
+      ```
+
+2. **Use o Postman**:
+    - Para criar um carrinho (`POST /cart`), adicione o `userId` no corpo.
+    - Para obter um carrinho (`GET /cart/:userId`), forneça o `userId` na URL.
+    - Para deletar um carrinho (`DELETE /cart/:cartId`), forneça o `cartId` na URL.
+    - Para criar um item de carrinho (`POST /cart-items`), adicione `cartId`, `bookId` e `quantidade` no corpo.
+    - Para deletar um item de carrinho (`DELETE /cart-items/:id`), forneça o `id` na URL.
+
+
+## Tecnologias Utilizadas
+- Prisma ORM
+- MongoBD

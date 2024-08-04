@@ -44,7 +44,7 @@ model CartItem {
   cart     Cart   @relation(fields: [cartId], references: [id])
   bookId   String @db.ObjectId
   book     Book   @relation(fields: [bookId], references: [id])
-  quantidade Int
+  quantity Int
 }
 
 enum Role {
