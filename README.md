@@ -30,7 +30,7 @@ classDiagram
         Integer quantidade
     }
 
-    enum Role {
+    class Role {
         USER
         ADMIN
     }
