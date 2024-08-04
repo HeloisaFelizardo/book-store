@@ -27,7 +27,7 @@ classDiagram
         String id
         String cartId
         String bookId
-        Integer quantidade
+        Integer quantity
     }
 
     class Role {
