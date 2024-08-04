@@ -73,5 +73,12 @@ classDiagram
 
 
 ## Tecnologias Utilizadas
+
+### Backend
+- JavaScript
 - Prisma ORM
 - MongoBD
+
+### Frontend
+- React
+- Axios

@@ -6,6 +6,7 @@ import {registerRoutes} from "./routes/registerRoutes.js";
 import {authenticateToken} from "./middleware/authenticateToken.js";
 import {cartRoutes} from "./routes/cartRoutes.js";
 import {cartItemRoutes} from "./routes/cartItemRoutes.js"; // Ajuste o caminho conforme necessário
+import {RegisterService} from "./services/RegisterService.js";
 
 const app = express();
 app.use(express.json());
@@ -31,4 +32,8 @@ app.use('/cart-items', cartItemRoutes);
 
 app.listen(PORT, () => {
   console.log(`Servidor rodando na porta ${PORT}`);
+
+  // Cria o usuário admin na inicialização do servidor
+  const registerService = new RegisterService();
+  registerService.createAdminUser();
 });

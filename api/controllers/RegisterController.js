@@ -1,40 +1,37 @@
-import { prisma } from '../index.js';
-import bcrypt from 'bcrypt';
-import jwt from 'jsonwebtoken';
-
-const JWT_SECRET = 'your_secret_key';
+import { RegisterService } from '../services/RegisterService.js';
 
 export class RegisterController {
+  constructor() {
+    this.registerService = new RegisterService();
+  }
+
   async createUser(req, res) {
-    const {email, password, name} = req.body;
-    const passwordHash = await bcrypt.hash(password, 10);
+    const { email, password, name } = req.body;
 
     try {
-      const user = await prisma.user.create({
-        data: {
-          email,
-          password: passwordHash,
-          name,
-          role: 'USER',
-        },
-      });
+      const user = await this.registerService.createUser(email, password, name);
       res.status(201).json(user);
     } catch (error) {
-      res.status(400).json({error: 'User already exists'});
+      res.status(400).json({ error: error.message });
     }
   }
 
-
   async createLogin(req, res) {
-    const {email, password} = req.body;
+    const { email, password } = req.body;
 
-    const user = await prisma.user.findUnique({where: {email}});
+    try {
+      const { token } = await this.registerService.createLogin(email, password);
+      res.json({ token });
+    } catch (error) {
+      res.status(401).json({ error: error.message });
+    }
+  }
 
-    if (user && await bcrypt.compare(password, user.password)) {
-      const token = jwt.sign({userId: user.id, role: user.role}, JWT_SECRET, {expiresIn: '1h'});
-      res.json({token});
-    } else {
-      res.status(401).json({error: 'Invalid email or password'});
+  async createAdminUser() {
+    try {
+      await this.registerService.createAdminUser();
+    } catch (error) {
+      console.error('Erro ao criar o usuário admin:', error);
     }
   }
 }
