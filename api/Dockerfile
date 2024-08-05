@@ -1,5 +1,5 @@
 # Use a imagem do Node.js para rodar a aplicação
-FROM node:16-alpine
+FROM node:18-alpine
 WORKDIR /app
 COPY package*.json ./
 RUN npm install

@@ -8,25 +8,13 @@ services:
       - "5000:5000"
     networks:
       - app-network
-    volumes:
-      - ./api:/app
-    depends_on:
-      - db
+
 
   client:
     build:
       context: ./client
     ports:
-      - "3000:3000"
-    networks:
-      - app-network
-    volumes:
-      - ./client:/app
-
-  db:
-    image: mongo:latest
-    ports:
-      - "27017:27017"
+      - "5173:5173"
     networks:
       - app-network
 
