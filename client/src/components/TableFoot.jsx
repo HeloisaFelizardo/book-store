@@ -8,26 +8,35 @@ export default function TableFoot({qtdLivros, addBook}) {
   const [bookAutor, setBookAutor] = useState('');
   const [bookEditora, setBookEditora] = useState('');
   const [bookPrice, setBookPrice] = useState('');
+  const [validated, setValidated] = useState(false);
 
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
 
-  function handleAddClick() {
-    // Adiciona o livro
-    addBook({
-      titulo: bookTitle,
-      autor: bookAutor,
-      editora: bookEditora,
-      preco: parseFloat(bookPrice),
-    });
+  function handleSubmit(event) {
+    const form = event.currentTarget;
+    event.preventDefault();
+    if (form.checkValidity() === false) {
+      event.stopPropagation();
+    } else {
+      // Adiciona o livro
+      addBook({
+        titulo: bookTitle,
+        autor: bookAutor,
+        editora: bookEditora,
+        preco: parseFloat(bookPrice),
+      });
 
-    // Limpa os campos do formulário
-    setBookTitle('');
-    setBookAutor('');
-    setBookEditora('');
-    setBookPrice('');
+      // Limpa os campos do formulário
+      setBookTitle('');
+      setBookAutor('');
+      setBookEditora('');
+      setBookPrice('');
 
-    handleClose();
+      handleClose();
+    }
+
+    setValidated(true);
   }
 
   return (
@@ -44,7 +53,7 @@ export default function TableFoot({qtdLivros, addBook}) {
           <Modal.Title>Adicionar Livro</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <Form>
+          <Form noValidate validated={validated} onSubmit={handleSubmit}>
             <Form.Group className="mb-3">
               <Form.Label>Título</Form.Label>
               <Form.Control
@@ -54,6 +63,9 @@ export default function TableFoot({qtdLivros, addBook}) {
                 onChange={(e) => setBookTitle(e.target.value)}
                 required
               />
+              <Form.Control.Feedback type="invalid">
+                Por favor, insira o título do livro.
+              </Form.Control.Feedback>
             </Form.Group>
             <Form.Group className="mb-3">
               <Form.Label>Autor</Form.Label>
@@ -64,6 +76,9 @@ export default function TableFoot({qtdLivros, addBook}) {
                 onChange={(e) => setBookAutor(e.target.value)}
                 required
               />
+              <Form.Control.Feedback type="invalid">
+                Por favor, insira o autor do livro.
+              </Form.Control.Feedback>
             </Form.Group>
             <Form.Group className="mb-3">
               <Form.Label>Editora</Form.Label>
@@ -74,6 +89,9 @@ export default function TableFoot({qtdLivros, addBook}) {
                 onChange={(e) => setBookEditora(e.target.value)}
                 required
               />
+              <Form.Control.Feedback type="invalid">
+                Por favor, insira a editora do livro.
+              </Form.Control.Feedback>
             </Form.Group>
             <Form.Group className="mb-3">
               <Form.Label>Preço</Form.Label>
@@ -84,17 +102,20 @@ export default function TableFoot({qtdLivros, addBook}) {
                 onChange={(e) => setBookPrice(e.target.value)}
                 required
               />
+              <Form.Control.Feedback type="invalid">
+                Por favor, insira o preço do livro.
+              </Form.Control.Feedback>
             </Form.Group>
+            <Modal.Footer>
+              <Button variant="secondary" onClick={handleClose}>
+                Fechar
+              </Button>
+              <Button variant="primary" type="submit">
+                Salvar
+              </Button>
+            </Modal.Footer>
           </Form>
         </Modal.Body>
-        <Modal.Footer>
-          <Button variant="secondary" onClick={handleClose}>
-            Fechar
-          </Button>
-          <Button variant="primary" onClick={handleAddClick}>
-            Salvar
-          </Button>
-        </Modal.Footer>
       </Modal>
     </>
   )

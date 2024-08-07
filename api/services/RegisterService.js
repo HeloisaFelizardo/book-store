@@ -9,14 +9,12 @@ const JWT_SECRET = process.env.JWT_SECRET || 'your_secret_key';
 
 export class RegisterService {
   async createUser(email, password, name) {
-    const userExists = await prisma.user.findUnique({ where: { email } });
-
-    if (userExists) {
+    if (await this.userExists(email)) {
       throw new Error('User already exists');
     }
 
-    const passwordHash = await bcrypt.hash(password, 10);
-    const user = await prisma.user.create({
+    const passwordHash = await this.hashPassword(password);
+    return prisma.user.create({
       data: {
         email,
         password: passwordHash,
@@ -24,20 +22,17 @@ export class RegisterService {
         role: 'USER',
       },
     });
-
-    return user;
   }
 
   async createLogin(email, password) {
     const user = await prisma.user.findUnique({ where: { email } });
-
-    if (!user || !(await bcrypt.compare(password, user.password))) {
+    if (!user || !(await this.comparePassword(password, user.password))) {
       throw new Error('Invalid email or password');
     }
 
-    const token = jwt.sign({ userId: user.id, role: user.role }, JWT_SECRET, { expiresIn: '1h' });
-
-    return { token };
+    return {
+      token: this.generateToken(user.id, user.role),
+    };
   }
 
   async createAdminUser() {
@@ -48,23 +43,38 @@ export class RegisterService {
       throw new Error('Admin email and password must be set in the environment variables.');
     }
 
-    const adminExists = await prisma.user.findUnique({ where: { email: adminEmail } });
-
-    if (!adminExists) {
-      const passwordHash = await bcrypt.hash(adminPassword, 10);
-
-      await prisma.user.create({
-        data: {
-          email: adminEmail,
-          password: passwordHash,
-          name: 'Admin',
-          role: 'ADMIN',
-        },
-      });
-
-      console.log('Usuário admin criado com sucesso.');
-    } else {
-      console.log('Usuário admin já existe.');
+    if (await this.userExists(adminEmail)) {
+      console.log('Admin user already exists.');
+      return;
     }
+
+    const passwordHash = await this.hashPassword(adminPassword);
+    await prisma.user.create({
+      data: {
+        email: adminEmail,
+        password: passwordHash,
+        name: 'Admin',
+        role: 'ADMIN',
+      },
+    });
+
+    console.log('Admin user created successfully.');
+  }
+
+  // Métodos auxiliares
+  async userExists(email) {
+    return !!await prisma.user.findUnique({ where: { email } });
+  }
+
+  async hashPassword(password) {
+    return bcrypt.hash(password, 10);
+  }
+
+  async comparePassword(password, hashedPassword) {
+    return bcrypt.compare(password, hashedPassword);
+  }
+
+  generateToken(userId, role) {
+    return jwt.sign({ userId, role }, JWT_SECRET, { expiresIn: '1h' });
   }
 }

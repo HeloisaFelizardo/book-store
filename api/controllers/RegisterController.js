@@ -9,7 +9,8 @@ export class RegisterController {
     const { email, password, name } = req.body;
 
     try {
-      const user = await this.registerService.createUser(email, password, name);
+      const user =
+        await this.registerService.createUser(email, password, name);
       res.status(201).json(user);
     } catch (error) {
       res.status(400).json({ error: error.message });
@@ -27,11 +28,13 @@ export class RegisterController {
     }
   }
 
-  async createAdminUser() {
+  async createAdminUser(req, res) {
     try {
       await this.registerService.createAdminUser();
+      res.status(200).json({ message: 'Admin user creation process initiated.' });
     } catch (error) {
-      console.error('Erro ao criar o usuário admin:', error);
+      console.error('Error creating admin user:', error);
+      res.status(500).json({ error: 'Failed to create admin user' });
     }
   }
 }
