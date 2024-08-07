@@ -6,15 +6,15 @@ export class BookController {
   }
 
   createBook = async (req, res) => {
-    const {titulo, autor, editora, preco} = req.body;
+    const {titulo, autor, editora, preco, imagem} = req.body;
 
     try {
       const newBook =
-        await this.bookService.createBook({titulo, autor, editora, preco});
+        await this.bookService.createBook({titulo, autor, editora, preco, imagem});
       res.status(201).json(newBook);
 
       console.log(`Recebido POST`);
-      console.log('Dados recebidos:', {titulo, autor, editora, preco});
+      console.log('Dados recebidos:', {titulo, autor, editora, preco, imagem});
 
     } catch (error) {
       console.error('Erro ao criar livro:', error.message);
@@ -52,16 +52,16 @@ export class BookController {
 
   updateBook = async (req, res) => {
     const {id} = req.params;
-    const {titulo, autor, editora, preco} = req.body;
+    const {titulo, autor, editora, preco, imagem} = req.body;
 
     try {
       const updatedBook =
         await this.bookService.updateBook({
-          id, titulo, autor, editora, preco,
+          id, titulo, autor, editora, preco, imagem
         });
 
       console.log(`Recebido PUT para ID: ${id}`);
-      console.log('Dados recebidos:', {titulo, autor, editora, preco});
+      console.log('Dados recebidos:', {titulo, autor, editora, preco, imagem});
       res.json(updatedBook);
 
     } catch (error) {

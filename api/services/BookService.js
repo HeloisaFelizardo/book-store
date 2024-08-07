@@ -1,8 +1,8 @@
 import {prisma} from '../index.js';
 
 export class BookService {
-  async createBook({titulo, autor, editora, preco}) {
-    if (!titulo || !autor || !editora || !preco) {
+  async createBook({titulo, autor, editora, preco, imagem}) {
+    if (!titulo || !autor || !editora || !preco || !imagem) {
       throw new Error('Todos os campos são obrigatórios.');
     }
 
@@ -11,7 +11,7 @@ export class BookService {
     }
 
     return prisma.book.create({
-      data: {titulo, autor, editora, preco},
+      data: {titulo, autor, editora, preco, imagem},
     });
   }
 
@@ -30,12 +30,12 @@ export class BookService {
     return prisma.book.findUnique({where: {id}});
   }
 
-  async updateBook({id, titulo, autor, editora, preco}) {
+  async updateBook({id, titulo, autor, editora, preco, imagem}) {
     if (!id) {
       throw new Error('ID do livro é obrigatório.');
     }
 
-    if (!titulo || !autor || !editora || !preco) {
+    if (!titulo || !autor || !editora || !preco || !imagem) {
       throw new Error('Todos os campos são obrigatórios.');
     }
 
@@ -47,7 +47,7 @@ export class BookService {
 
     return prisma.book.update({
       where: {id},
-      data: {titulo, autor, editora, preco},
+      data: {titulo, autor, editora, preco, imagem},
     });
   }
 
