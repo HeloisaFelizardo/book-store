@@ -1,58 +1,84 @@
-import {Button, Modal, Form} from "react-bootstrap";
-import {PlusLg} from "react-bootstrap-icons";
-import {useState} from "react";
+import { Button, Modal, Form } from "react-bootstrap";
+import { PlusLg } from "react-bootstrap-icons";
+import { useState, useRef } from "react";
 
-export default function TableFoot({qtdLivros, addBook}) {
+export default function TableFoot({ qtdLivros, addBook }) {
   const [show, setShow] = useState(false);
   const [bookTitle, setBookTitle] = useState('');
   const [bookAutor, setBookAutor] = useState('');
   const [bookEditora, setBookEditora] = useState('');
   const [bookPrice, setBookPrice] = useState('');
+  const [tempImage, setTempImage] = useState(''); // State to store image temporarily
   const [validated, setValidated] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
+  const fileInputRef = useRef(null);
 
-  const handleClose = () => setShow(false);
+  const handleClose = () => {
+    setShow(false);
+    setTempImage(''); // Clear temporary image on close
+    setValidated(false);
+    setErrorMessage('');
+  };
+
   const handleShow = () => setShow(true);
 
-  function handleSubmit(event) {
+  const handleSubmit = async (event) => {
     const form = event.currentTarget;
     event.preventDefault();
     if (form.checkValidity() === false) {
       event.stopPropagation();
     } else {
-      // Adiciona o livro
-      addBook({
-        titulo: bookTitle,
-        autor: bookAutor,
-        editora: bookEditora,
-        preco: parseFloat(bookPrice),
-      });
+      try {
+        await addBook({
+          titulo: bookTitle,
+          autor: bookAutor,
+          editora: bookEditora,
+          preco: parseFloat(bookPrice),
+          imagem: tempImage // Use temporary image
+        });
 
-      // Limpa os campos do formulário
-      setBookTitle('');
-      setBookAutor('');
-      setBookEditora('');
-      setBookPrice('');
-
-      handleClose();
+        // Clear form fields
+        setBookTitle('');
+        setBookAutor('');
+        setBookEditora('');
+        setBookPrice('');
+        setTempImage('');
+        handleClose();
+      } catch (error) {
+        console.error('Erro ao adicionar livro:', error);
+        setErrorMessage('Erro ao adicionar livro. Tente novamente.');
+      }
     }
-
     setValidated(true);
-  }
+  };
+
+  const handleFileChange = (event) => {
+    const file = event.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        const imageData = reader.result;
+        setTempImage(imageData); // Store image temporarily
+      };
+      reader.readAsDataURL(file);
+    }
+  };
 
   return (
     <>
       <tfoot>
       <tr>
-        <td colSpan='4'>Quantidade de livros na tabela: {qtdLivros}</td>
-        <td><Button variant='success' size='sm' onClick={handleShow}>Add <PlusLg/></Button></td>
+        <td colSpan='5'>Quantidade de livros na tabela: {qtdLivros}</td>
+        <td><Button variant='success' size='sm' onClick={handleShow}>Add <PlusLg /></Button></td>
       </tr>
       </tfoot>
 
       <Modal show={show} onHide={handleClose}>
-        <Modal.Header>
+        <Modal.Header closeButton>
           <Modal.Title>Adicionar Livro</Modal.Title>
         </Modal.Header>
         <Modal.Body>
+          {errorMessage && <p className="text-danger">{errorMessage}</p>}
           <Form noValidate validated={validated} onSubmit={handleSubmit}>
             <Form.Group className="mb-3">
               <Form.Label>Título</Form.Label>
@@ -106,6 +132,16 @@ export default function TableFoot({qtdLivros, addBook}) {
                 Por favor, insira o preço do livro.
               </Form.Control.Feedback>
             </Form.Group>
+            <Form.Group className="mb-3">
+              <Form.Label>Imagem da Capa</Form.Label>
+              <Form.Control
+                type="file"
+                accept="image/*"
+                onChange={handleFileChange}
+                ref={fileInputRef}
+              />
+              {tempImage && <img src={tempImage} alt="Preview" style={{ width: '100px', marginTop: '10px' }} />}
+            </Form.Group>
             <Modal.Footer>
               <Button variant="secondary" onClick={handleClose}>
                 Fechar
@@ -118,5 +154,5 @@ export default function TableFoot({qtdLivros, addBook}) {
         </Modal.Body>
       </Modal>
     </>
-  )
+  );
 }

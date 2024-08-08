@@ -20,7 +20,7 @@ model Book {
   autor     String
   editora   String
   preco     Float
-  imagem    String
+  imagem    String?
   cartItems CartItem[]
 }
 

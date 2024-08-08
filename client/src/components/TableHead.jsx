@@ -6,7 +6,8 @@ export default function TableHead({ onSort }) {
     { title: "Título", key: "titulo" },
     { title: "Autor", key: "autor" },
     { title: "Editora", key: "editora" },
-    { title: "Preço", key: "preco" }
+    { title: "Preço", key: "preco" },
+    {title: 'Capa', key: "imagem"}
   ];
 
   return (
