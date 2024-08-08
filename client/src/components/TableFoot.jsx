@@ -1,4 +1,5 @@
 import { Button, Modal, Form } from "react-bootstrap";
+import PropTypes from 'prop-types';
 import { PlusLg } from "react-bootstrap-icons";
 import { useState, useRef } from "react";
 
@@ -156,3 +157,18 @@ export default function TableFoot({ qtdLivros, addBook }) {
     </>
   );
 }
+
+TableFoot.propTypes = {
+  livros: PropTypes.arrayOf(
+    PropTypes.shape({
+      id: PropTypes.string.isRequired,
+      titulo: PropTypes.string.isRequired,
+      autor: PropTypes.string.isRequired,
+      editora: PropTypes.string.isRequired,
+      preco: PropTypes.number.isRequired,
+      imagem: PropTypes.string
+    })
+  ).isRequired,
+  qtdLivros: PropTypes.func.isRequired,
+  addBook: PropTypes.func.isRequired,
+};
