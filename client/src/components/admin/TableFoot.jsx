@@ -159,16 +159,6 @@ export default function TableFoot({ qtdLivros, addBook }) {
 }
 
 TableFoot.propTypes = {
-  livros: PropTypes.arrayOf(
-    PropTypes.shape({
-      id: PropTypes.string.isRequired,
-      titulo: PropTypes.string.isRequired,
-      autor: PropTypes.string.isRequired,
-      editora: PropTypes.string.isRequired,
-      preco: PropTypes.number.isRequired,
-      imagem: PropTypes.string
-    })
-  ).isRequired,
-  qtdLivros: PropTypes.func.isRequired,
+  qtdLivros: PropTypes.number.isRequired,
   addBook: PropTypes.func.isRequired,
 };

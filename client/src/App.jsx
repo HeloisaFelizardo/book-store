@@ -1,79 +1,20 @@
-import { useState, useEffect } from "react";
-import { Container, Table } from "react-bootstrap";
-import TableHead from "./components/TableHead.jsx";
-import TableFoot from "./components/TableFoot.jsx";
-import TableBody from "./components/TableBody.jsx";
-import { fetchLivros, addBook, updateBook, deleteBook } from "./services/bookService.jsx";
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import HomePage from './pages/home/HomePage.jsx';
+import AdminDashboard from './pages/admin/AdminDashboard.jsx';
+import LoginPage from './pages/LoginPage.jsx';
+import CartPage from './pages/CartPage.jsx';
+
 
 function App() {
-  const [livros, setLivros] = useState([]);
-
-  useEffect(() => {
-    const loadBooks = async () => {
-      try {
-        const livrosData = await fetchLivros();
-        setLivros(livrosData);
-      } catch (error) {
-        console.error('Erro ao carregar livros:', error);
-      }
-    };
-
-    loadBooks();
-  }, []);
-
-  const handleSort = (column, direction) => {
-    const sortedBooks = [...livros].sort((a, b) => {
-      if (typeof a[column] === 'string') {
-        return direction === 'asc'
-          ? a[column].localeCompare(b[column])
-          : b[column].localeCompare(a[column]);
-      }
-      return direction === 'asc'
-        ? a[column] - b[column]
-        : b[column] - a[column];
-    });
-    setLivros(sortedBooks);
-  };
-
-  const handleAddBook = async (newBook) => {
-    try {
-      const addedBook = await addBook(newBook);
-      setLivros([...livros, addedBook]);
-    } catch (error) {
-      console.error('Erro ao adicionar livro:', error);
-    }
-  };
-
-  const handleUpdateBook = async (id, updatedBook) => {
-    try {
-      const updated = await updateBook(id, updatedBook);
-      setLivros(livros.map(livro => (livro.id === id ? updated : livro)));
-    } catch (error) {
-      console.error('Erro ao atualizar livro:', error);
-    }
-  };
-
-  const handleDeleteBook = async (id) => {
-    try {
-      await deleteBook(id);
-      setLivros(livros.filter(livro => livro.id !== id));
-    } catch (error) {
-      console.error('Erro ao excluir livro:', error);
-    }
-  };
-
   return (
-    <Container>
-      <Table striped bordered hover responsive="lg">
-        <TableHead onSort={handleSort} />
-        <TableBody
-          livros={livros}
-          deleteBook={handleDeleteBook}
-          updateBook={handleUpdateBook}
-        />
-        <TableFoot qtdLivros={livros.length} addBook={handleAddBook}/>
-      </Table>
-    </Container>
+    <Router>
+      <Routes>
+        <Route path="/" element={<HomePage />} />
+        <Route path="/admin" element={<AdminDashboard />} />
+        <Route path="/login" element={<LoginPage />} />
+        <Route path="/cart" element={<CartPage />} />
+      </Routes>
+    </Router>
   );
 }
 
