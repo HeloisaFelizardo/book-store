@@ -37,6 +37,7 @@ export default function Menu(){
             />
             <Button variant="outline-success">Search</Button>
           </Form>
+          <Button variant="primary">Login</Button>
         </Navbar.Collapse>
       </Container>
     </Navbar>
